@@ -37,6 +37,7 @@ def app():
         
         #kite = KiteConnect(api_key=key_secret[0])
         #kite.set_access_token(access_token[1].strip())
+        
         kite = KiteConnect(api_key=st.session_state.key_secret[0])
         kite.set_access_token(st.session_state.access_token[1].strip())
         # Fetch position details
@@ -156,4 +157,3 @@ def calculation(x,dataframe_display,dataframe):
     
           
 
-app()
