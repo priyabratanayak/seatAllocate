@@ -45,9 +45,7 @@ def app():
     st.title("Buy")
     components.html(
         """<hr style="height:10px;border:none;color:#333;background-color:#333;" /> """)
-    master_usecase_output = pd.DataFrame()
-    placeholder = None
-   
+    
     with st.form(key="buy"):
             # create radio button
             text=st.empty()
