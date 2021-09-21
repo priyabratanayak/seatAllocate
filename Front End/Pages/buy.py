@@ -35,8 +35,9 @@ def app():
     if 'placeholder_instrument' not in st.session_state:
         st.session_state['placeholder_instrument']=None
         
-    kite = KiteConnect(api_key=st.session_state.key_secret[0])
-    kite.set_access_token(st.session_state.access_token[1].strip())           
+    if st.session_state.kite is None:
+            st.session_state.kite = KiteConnect(api_key=st.session_state.key_secret[0])
+            st.session_state.kite.set_access_token(st.session_state.access_token[1].strip())           
     # for wider screen
     background_color = '#F5F5F5'
     placeholder=None
@@ -95,17 +96,17 @@ def app():
                     
                     
                     if st.session_state.exchange=='NSE':                    
-                        buy_exchange=kite.EXCHANGE_NSE
+                        buy_exchange=st.session_state.kite.EXCHANGE_NSE
                     elif st.session_state.exchange=='BSE':                    
-                        buy_exchange=kite.EXCHANGE_BSE
+                        buy_exchange=st.session_state.kite.EXCHANGE_BSE
                         
                     
                     if st.session_state.category=='Regular':
-                        buy_variety=kite.VARIETY_REGULAR
+                        buy_variety=st.session_state.kite.VARIETY_REGULAR
                     elif st.session_state.category=='Cover':
-                        buy_variety=kite.VARIETY_CO
+                        buy_variety=st.session_state.kite.VARIETY_CO
                     elif st.session_state.category=='AMO':
-                        buy_variety=kite.VARIETY_AMO
+                        buy_variety=st.session_state.kite.VARIETY_AMO
                         
                         
                     if len(st.session_state.instrument)>0:
@@ -115,19 +116,19 @@ def app():
                         buy_quantity=st.session_state.qt
                     
                     if st.session_state.type=='Longterm CNC':
-                        buy_product=kite.PRODUCT_CNC
+                        buy_product=st.session_state.kite.PRODUCT_CNC
                     elif st.session_state.type=='Intraday (MIS)':
-                        buy_product=kite.PRODUCT_MIS
+                        buy_product=st.session_state.kite.PRODUCT_MIS
                         
                         
                     if st.session_state.ordertype=='Market':
-                        buy_ORDER_TYPE=kite.ORDER_TYPE_MARKET
+                        buy_ORDER_TYPE=st.session_state.kite.ORDER_TYPE_MARKET
                     elif st.session_state.ordertype=='Limit':
-                        buy_ORDER_TYPE=kite.ORDER_TYPE_LIMIT
+                        buy_ORDER_TYPE=st.session_state.kite.ORDER_TYPE_LIMIT
                     elif st.session_state.ordertype=='SL':
-                        buy_ORDER_TYPE=kite.ORDER_TYPE_SL
+                        buy_ORDER_TYPE=st.session_state.kite.ORDER_TYPE_SL
                     elif st.session_state.ordertype=='SL-M':
-                        buy_ORDER_TYPE=kite.ORDER_TYPE_SLM
+                        buy_ORDER_TYPE=st.session_state.kite.ORDER_TYPE_SLM
                         
                         
                     
@@ -137,14 +138,14 @@ def app():
                         if st.session_state.ordertype=='Market':
                             st.write(symbol)
                             st.write(buy_exchange)
-                            st.write(kite.TRANSACTION_TYPE_BUY)
+                            st.write(st.session_state.kite.TRANSACTION_TYPE_BUY)
                             st.write(buy_quantity)
                             st.write(buy_ORDER_TYPE)
                             st.write(buy_product)
                             st.write(buy_variety)
-                            sts=kite.place_order(tradingsymbol=symbol,
+                            sts=st.session_state.kite.place_order(tradingsymbol=symbol,
                                         exchange=buy_exchange,
-                                        transaction_type=kite.TRANSACTION_TYPE_BUY,
+                                        transaction_type=st.session_state.kite.TRANSACTION_TYPE_BUY,
                                         quantity=buy_quantity,
                                         order_type=buy_ORDER_TYPE,
                                         product=buy_product,
@@ -163,13 +164,13 @@ def app():
                     if len(st.session_state.instrument)>0:
                         symbol=st.session_state.instrument
                         try:
-                            msg=kite.cancel_order(order_id=symbol,variety=kite.VARIETY_REGULAR)
+                            msg=st.session_state.kite.cancel_order(order_id=symbol,variety=st.session_state.kite.VARIETY_REGULAR)
                             st.session_state.placeholder_msg.success(msg)
                         except:
                             st.session_state.placeholder_msg.error("Order cannot be cancelled as it is being processed")
                             
             
-            orders = kite.orders()
+            orders = st.session_state.kite.orders()
             net_df=pd.DataFrame(orders) 
             if net_df.shape[0]>0:
                 

@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 from kiteconnect import KiteConnect
 import os
-#import connect
+import  connect
 import plotly.express as px
 import plotly.graph_objects as go
 # Security
@@ -18,6 +18,7 @@ import time
 from multipage import MultiPage
 from Pages import sell,buy,login,signup,holdings,positions,orders,profits
 from PIL import  Image
+
 try:
     st.set_page_config(layout="wide")
 except:
@@ -60,7 +61,18 @@ def main():
         st.session_state['key_secret']=None
     if 'holding' not in st.session_state:
             st.session_state['holding']=None
-           
+    if 'kite' not in st.session_state:
+            st.session_state['kite']=None
+         
+    os.chdir('C:\\Users\\PRIYABRATANAYAK\\Documents\\Python Tutorial\\sharereport')
+    
+    #generate trading session
+    st.session_state.access_token = open(os.path.join(os.getcwd(),"access_token.txt"),'r').read().split()
+    st.session_state.key_secret = open(os.path.join(os.getcwd(),"api_key.txt"),'r').read().split()
+    
+    st.session_state.kite = KiteConnect(api_key=st.session_state.key_secret[0])
+    
+    st.session_state.kite.set_access_token(st.session_state.access_token[1].strip())
     app = MultiPage()    
     # Title of the main page
     

@@ -7,7 +7,7 @@ import datetime
 import os.path
 import pytz
 
-cwd=os.path.join(os.getcwd(),"Share Trading Zerodha")
+#cwd=os.path.join(os.getcwd(),"Share Trading Zerodha")
 
 def autologin():
     token_path = "api_key.txt"
@@ -37,8 +37,9 @@ def autologin():
        
         the_file.write(request_token)
     driver.quit()
-
-
+autologin()
+print(os.getcwd())
+print(os.path.join(os.getcwd(),'access_token.txt'))
 if not os.path.isfile(os.path.join(os.getcwd(),'access_token.txt')) :
     
     autologin()

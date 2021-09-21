@@ -33,15 +33,14 @@ def app():
         #access_token = open(os.path.join(os.getcwd(), "../access_token.txt"),'r').read().split()
         #key_secret = open(os.path.join(os.getcwd(), "../api_key.txt"),'r').read().split()
         #...............................................
-        background_color='#F5F5F5'
         
         #kite = KiteConnect(api_key=key_secret[0])
         #kite.set_access_token(access_token[1].strip())
-        
-        kite = KiteConnect(api_key=st.session_state.key_secret[0])
-        kite.set_access_token(st.session_state.access_token[1].strip())
+        if st.session_state.kite is None:
+            st.session_state.kite = KiteConnect(api_key=st.session_state.key_secret[0])
+            st.session_state.kite.set_access_token(st.session_state.access_token[1].strip())
         # Fetch position details
-        positions = kite.positions()
+        positions = st.session_state.kite.positions()
         net_df=pd.DataFrame(positions['net']) 
         
         net_df=net_df[['product','tradingsymbol','quantity','average_price','last_price','pnl']]
@@ -58,7 +57,7 @@ def app():
         
         
         
-        orders = kite.orders()
+        orders =st.session_state. kite.orders()
         
         order_df=pd.DataFrame(orders) 
         
@@ -70,7 +69,7 @@ def app():
         order_df_buy=order_df[order_df['Type']=="BUY"]
         
         
-        holdings = kite.holdings()
+        holdings = st.session_state.kite.holdings()
         holdings_df=pd.DataFrame(holdings)        
         holdings_df_to_display=holdings_df[['tradingsymbol','quantity','average_price','last_price','day_change','day_change_percentage','pnl']]
         holdings_df_to_display['Cur. val']=holdings_df_to_display['quantity']*holdings_df_to_display['last_price']
@@ -135,22 +134,19 @@ def calculation(x,dataframe_display,dataframe):
     temp_hold=holdings_df_to_display[holdings_df_to_display['Instrument'].str.contains(pat=x['Instrument'])]
     
     if temp_hold.shape[0]>0:
-        print(x['Instrument'])
+        
         buyvalue=float(temp_hold['Avg. cost'].to_string(index=False))
         
         sellvalue=float(x['Avg.'])
-        print(buyvalue,sellvalue,x['Qty.'])
+        
         buytotal=int(x['Qty.'])*buyvalue
         selltotal=int(x['Qty.'])*sellvalue
-        print(buytotal,selltotal)
+        
         difference=selltotal-buytotal
         stt=(0.001*selltotal)+(0.001*buytotal)
         
         difference=difference-round(stt)
         
-        
-        
-        print(round(stt),round(difference))
         return round(stt),round(difference)
     #print(order_df_sell)        
     return 0,0

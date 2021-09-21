@@ -21,26 +21,20 @@ from pathlib import Path
 from kiteconnect import KiteConnect
 def app():
         
-        header=st.container()
-        cwd=os.path.join(os.getcwd(),"Share Trading Zerodha")
-        #generate trading session
-        #st.subheader(os.path.join(os.getcwd()))
-        cwd = Path.cwd()
         
         
         #...............................................
         #Use this path in Heroku
         
-        access_token = open(os.path.join(os.getcwd(), "../access_token.txt"),'r').read().split()
-        key_secret = open(os.path.join(os.getcwd(), "../api_key.txt"),'r').read().split()
+        #access_token = open(os.path.join(os.getcwd(), "../access_token.txt"),'r').read().split()
+        #key_secret = open(os.path.join(os.getcwd(), "../api_key.txt"),'r').read().split()
         #...............................................
-        background_color='#F5F5F5'
-        
-        kite = KiteConnect(api_key=key_secret[0])
-        kite.set_access_token(access_token[1].strip())
+        if st.session_state.kite is None:
+            st.session_state.kite = KiteConnect(api_key=st.session_state.key_secret[0])
+            st.session_state.kite.set_access_token(st.session_state.access_token[1].strip())
         
         # Fetch position details
-        orders = kite.orders()
+        orders = st.session_state.kite.orders()
         
         net_df=pd.DataFrame(orders) 
         
@@ -48,7 +42,7 @@ def app():
         
         net_df = net_df.rename({'order_timestamp':'Time','transaction_type':'Type','tradingsymbol':'Instrument','product':'Product',"quantity":'Qty.','average_price':'Avg.','status':'Status'}, axis='columns')
         st.subheader("Executed orders ("+str(net_df.shape[0])+")")
-        
+        background_color = '#F5F5F5'
         net_df.index = np.arange(1, len(net_df) + 1)
         fig=go.Figure(data=go.Table(
             columnwidth=[0.1,0.1,0.2,0.1,0.1,0.1,0.1],

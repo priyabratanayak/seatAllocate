@@ -21,13 +21,7 @@ from pathlib import Path
 from kiteconnect import KiteConnect
 def app():
         
-        header=st.container()
-        cwd=os.path.join(os.getcwd(),"Share Trading Zerodha")
-        #generate trading session
-        #st.subheader(os.path.join(os.getcwd()))
-        cwd = Path.cwd()
-        
-        goal_dir = cwd.parent.parent / "access_token.txt"
+       
             
         #st.subheader(os.path.isfile(os.path.join(os.getcwd(), "access_token.txt")))
         
@@ -40,11 +34,12 @@ def app():
         #...............................................
         
         background_color='#F5F5F5'
-        kite = KiteConnect(api_key=st.session_state.key_secret[0])
-        kite.set_access_token(st.session_state.access_token[1].strip())
+        if st.session_state.kite is None:
+            st.session_state.kite = KiteConnect(api_key=st.session_state.key_secret[0])
+            st.session_state.kite.set_access_token(st.session_state.access_token[1].strip())
     
         # Fetch position details
-        positions = kite.positions()
+        positions = st.session_state.kite.positions()
         
         net_df=pd.DataFrame(positions['net']) 
         
