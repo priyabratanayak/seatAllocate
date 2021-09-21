@@ -47,11 +47,7 @@ def app():
         """<hr style="height:10px;border:none;color:#333;background-color:#333;" /> """)
     master_usecase_output = pd.DataFrame()
     placeholder = None
-    add_selectbox = st.sidebar.selectbox(
-        'Search Options',
-        ('Semantic Search', 'String Search')
-    )
-    
+   
     with st.form(key="buy"):
             # create radio button
             text=st.empty()
