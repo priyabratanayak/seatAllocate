@@ -64,7 +64,7 @@ def main():
     if 'kite' not in st.session_state:
             st.session_state['kite']=None
          
-    os.chdir('C:\\Users\\PRIYABRATANAYAK\\Documents\\Python Tutorial\\sharereport')
+    #os.chdir('C:\\Users\\PRIYABRATANAYAK\\Documents\\Python Tutorial\\sharereport')
     
     #generate trading session
     st.session_state.access_token = open(os.path.join(os.getcwd(),"access_token.txt"),'r').read().split()
