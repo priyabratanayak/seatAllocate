@@ -17,10 +17,13 @@ def autologin():
     #service = webdriver.chrome.service.Service('/usr/bin/chromedriver')
     
     service.start()
-    options = webdriver.ChromeOptions()
+    options = webdriver.ChromeOptions()    
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
     options.add_argument('--headless')
     options = options.to_capabilities()
-    driver = webdriver.Remote(service.service_url, options)
+    #driver = webdriver.Remote(service.service_url, options)
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=options)
+    
     driver.get(kite.login_url())
     driver.implicitly_wait(10)
     username = driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[1]/div/div/div[2]/form/div[1]/input')
@@ -37,7 +40,7 @@ def autologin():
        
         the_file.write(request_token)
     driver.quit()
-autologin()
+
 print(os.getcwd())
 print(os.path.join(os.getcwd(),'access_token.txt'))
 if not os.path.isfile(os.path.join(os.getcwd(),'access_token.txt')) :
