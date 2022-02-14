@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 16 15:21:53 2021
 
-@author: 028906744
-"""
-"""
-This file is the framework for generating multiple Streamlit applications 
-through an object oriented framework. 
-"""
 
 # Import necessary libraries 
 import streamlit as st
@@ -38,7 +30,7 @@ class MultiPage:
     def run(self):
         # Drodown to select the page to run  
         page = st.sidebar.selectbox(
-            'App Navigation', 
+            'Seat Allocation', 
             self.pages, 
             format_func=lambda page: page['title']
         )

@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 16 16:37:24 2021
 
-@author: 028906744
-"""
 import plotly.express as px
 import plotly.graph_objects as go
 # Security
@@ -20,6 +15,12 @@ import os
 from pathlib import Path
 from kiteconnect import KiteConnect
 conn = sqlite3.connect('data.db')
+from dateutil import parser
+from userValidation import SigninDetails
+import datetime as dt
+
+import bcrypt
+        
 c = conn.cursor()
 def make_hashes(password):
 	return hashlib.sha256(str.encode(password)).hexdigest()
@@ -53,9 +54,20 @@ def app():
         st.subheader("Create New Account")
         new_user = st.text_input("Username")
         new_password = st.text_input("Password",type='password')
-
+        
         if st.button("Signup"):
-            create_usertable()
-            add_userdata(new_user,make_hashes(new_password))
-            st.success("You have successfully created a valid Account")
-            st.info("Go to Login Menu to login")
+            Collection_Credentials="Credentials"
+            share_Prediction=SigninDetails("mongodb://localhost:27017/","Allocation")
+            
+            share_Prediction.create_Collection(Collection_Credentials)            
+               
+            msg=share_Prediction.create_credentials(str(new_user).upper(),str(new_password).encode('utf-8'))
+            
+            if msg=="Success":
+                st.session_state.userid=new_user
+                
+                st.success("You have successfully created a valid Account")
+                st.info("Go to Login Menu to login")
+                st.balloons()
+            else:
+                st.error("User Creation Failure")

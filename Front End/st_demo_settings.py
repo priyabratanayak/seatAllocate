@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 16 17:39:29 2021
-
-@author: 028906744
-"""
 import streamlit as st
 
 
@@ -38,7 +33,7 @@ def main():
 
 def page_home():
     # ** ** will bold the content inside it
-    #- will make it a dot
+    # - will make it a dot
     st.write(f"""
     # Settings values
     
