@@ -182,12 +182,19 @@ def check_hashes(password,hashed_text):
 def autologin(key_secret):
     token_path = "api_key.txt"
     kite = KiteConnect(api_key=key_secret[1])#API Key
+    #To run in Local
     service = webdriver.chrome.service.Service('./chromedriver')#change it to /usr/bin/chromedriverwhile uploading to linux
-    #service = webdriver.chrome.service.Service('/usr/bin/chromedriver')
-    
     service.start()
+    
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
+    
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    options.add_argument("--headless")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=options)
+
+    
     options = options.to_capabilities()
     driver = webdriver.Remote(service.service_url, options)
     driver.get(kite.login_url())
